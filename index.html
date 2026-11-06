@@ -14,13 +14,14 @@
 <body>
   <div class="ambient ambient-one" aria-hidden="true"></div>
   <div class="ambient ambient-two" aria-hidden="true"></div>
+  <div class="floating-petals" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
   <main class="app-shell">
     <section class="screen screen-intro is-active" id="intro" aria-labelledby="intro-title">
       <div class="topline"><span class="topline-mark">✳</span><span>НАША ИСТОРИЯ</span><span class="topline-year">ГЛАВА III</span></div>
       <div class="intro-card paper-card">
         <div class="eyebrow"><span class="eyebrow-line"></span>ТРИ ГОДА ВМЕСТЕ<span class="eyebrow-line"></span></div>
         <div class="small-heart" aria-hidden="true">♥</div>
-        <h1 id="intro-title">Дорогая<br><em>жена!</em></h1>
+        <h1 id="intro-title">Дорогая<br><em>жина!</em></h1>
         <div class="letter-copy">
           <p>Ровно три года назад мы стали не просто близкими, а по-настоящему родными людьми. В тот день нас объявили мужем и женой.</p>
           <p>Всего за три года мы с тобой прошли через многое. На нашем пути встречались даже самые сложные испытания, но вместе мы смогли преодолеть их.</p>
@@ -58,14 +59,14 @@
       </div>
       <div class="music-bar" id="music-bar">
         <span class="music-icon" aria-hidden="true">♫</span>
-        <div class="music-copy"><strong>Наша песня</strong><small id="music-status">Добавим сюда наш особенный трек</small></div>
+        <div class="music-copy"><strong>Наша песня</strong><small id="music-status" aria-live="polite">Tony Tonite — «Бомба»</small></div>
         <button class="music-toggle" id="music-toggle" type="button" aria-label="Включить музыку" disabled>▶</button>
       </div>
-      <audio id="our-song" preload="auto" playsinline><source src="./assets/our-song.mp3" type="audio/mpeg"></audio>
+      <audio id="our-song" src="./assets/our-song.mp3" preload="auto" playsinline></audio>
       <div class="future-copy">
         <p>Впереди нас ждёт ещё много приключений, интересной и классной жизни, взросление нашей маленькой принцессы, переезды, покупки, отдых, ремонты :)</p>
         <p>Но что бы ни случилось, я буду всегда с тобой рядом. Рядом с нашей малышкой.</p>
-        <p class="love-line">Я люблю тебя всем сердцем!<br>Я очень счастлив!</p>
+        <p class="love-line">Я люблю тебя всем сердцем!<br>Я очень счастлив, что ты моя половинка!</p>
       </div>
       <button class="button button-primary gift-cta" id="gift-button" type="button">Выбрать подарок <span aria-hidden="true">→</span></button>
       <div class="page-foot"><span>И ЭТО ТОЛЬКО НАЧАЛО</span><span>02 / 03</span></div>
@@ -110,6 +111,7 @@
           <span class="coupon-bottom"><span>С ЛЮБОВЬЮ</span><span>ОТКРЫТЬ ↗</span></span>
         </button>
       </div>
+      <div class="gift-reminder"><span class="reminder-mark">♥</span><span>Выбери купон и нажми «Забираю» — мне придёт письмо с твоим выбором.</span></div>
       <p class="coupon-note">Купоны бессрочные. Количество объятий не ограничено.</p>
       <div class="page-foot"><span>ТВОЙ ЛИЧНЫЙ ПОДАРОЧНЫЙ ФОНД</span><span>03 / 03</span></div>
     </section>
@@ -137,7 +139,9 @@
       <h2 id="modal-title">Твой подарок</h2>
       <p id="modal-description"></p>
       <div class="modal-stamp">С ЛЮБОВЬЮ · БЕССРОЧНО</div>
+      <p class="notification-status" id="notification-status" aria-live="polite"></p>
       <button class="button button-primary modal-accept" id="modal-accept" type="button">Забираю ♥</button>
+      <p class="modal-footnote">После подтверждения выбора я получу письмо.</p>
     </div>
   </div>
   <script src="script.js"></script>
