@@ -8,6 +8,33 @@ const modal = document.getElementById('coupon-modal');
 const modalTitle = document.getElementById('modal-title');
 const modalDescription = document.getElementById('modal-description');
 const modalEyebrow = document.getElementById('modal-eyebrow');
+const hasAudioSource = Boolean(audio && (audio.getAttribute('src') || audio.querySelector('source[src]')));
+
+function setMusicPlaying(isPlaying) {
+  musicToggle.textContent = isPlaying ? 'Ⅱ' : '▶';
+  musicToggle.setAttribute('aria-label', isPlaying ? 'Поставить музыку на паузу' : 'Включить музыку');
+  if (isPlaying) musicStatus.textContent = 'Сейчас играет наша песня';
+}
+
+function playOurSong() {
+  if (!hasAudioSource) {
+    musicStatus.textContent = 'Музыкальный файл не найден';
+    return;
+  }
+  musicToggle.disabled = false;
+  musicStatus.textContent = 'Запускаем нашу песню…';
+  const playAttempt = audio.play();
+  if (playAttempt && typeof playAttempt.then === 'function') {
+    playAttempt.then(() => setMusicPlaying(true)).catch((error) => {
+      setMusicPlaying(false);
+      musicStatus.textContent = error && error.name === 'NotAllowedError'
+        ? 'Нажми ▶, чтобы разрешить воспроизведение'
+        : 'Не удалось загрузить песню. Нажми ▶ или проверь файл на GitHub';
+    });
+  } else {
+    setMusicPlaying(true);
+  }
+}
 
 const coupons = {
   ring: {
@@ -53,20 +80,9 @@ function showScreen(id) {
 
 document.getElementById('yes-button').addEventListener('click', () => {
   showScreen('yes-page');
-  // Запрос воспроизведения выполняется прямо в обработчике нажатия — это важно для iOS Safari.
-  if (audio && audio.getAttribute('src')) {
-    musicToggle.disabled = false;
-    musicToggle.textContent = '▶';
-    audio.play().then(() => {
-      musicToggle.textContent = 'Ⅱ';
-      musicToggle.setAttribute('aria-label', 'Поставить музыку на паузу');
-      musicStatus.textContent = 'Сейчас играет наша песня';
-    }).catch(() => {
-      musicToggle.textContent = '▶';
-      musicToggle.setAttribute('aria-label', 'Включить музыку');
-      musicStatus.textContent = 'Нажми ▶, чтобы запустить нашу песню';
-    });
-  }
+  // Источник задан вложенным <source>, поэтому проверяем и его, а не только audio[src].
+  // play() вызывается непосредственно после нажатия — это важно для iOS Safari.
+  playOurSong();
 });
 
 document.getElementById('no-button').addEventListener('click', () => showScreen('no-page'));
@@ -81,24 +97,26 @@ if (memoryImage.complete && memoryImage.naturalWidth > 0) memoryFrame.classList.
 
 musicToggle.addEventListener('click', () => {
   if (audio.paused) {
-    audio.play().then(() => {
-      musicToggle.textContent = 'Ⅱ';
-      musicToggle.setAttribute('aria-label', 'Поставить музыку на паузу');
-      musicStatus.textContent = 'Сейчас играет наша песня';
-    }).catch(() => {
-      musicStatus.textContent = 'Не удалось запустить музыку';
-    });
+    playOurSong();
   } else {
     audio.pause();
-    musicToggle.textContent = '▶';
-    musicToggle.setAttribute('aria-label', 'Продолжить музыку');
+    setMusicPlaying(false);
     musicStatus.textContent = 'Музыка на паузе';
   }
 });
 
+audio.addEventListener('playing', () => setMusicPlaying(true));
+audio.addEventListener('pause', () => {
+  if (!audio.ended) setMusicPlaying(false);
+});
+audio.addEventListener('error', () => {
+  musicToggle.disabled = false;
+  setMusicPlaying(false);
+  musicStatus.textContent = 'Не удалось загрузить MP3. Проверь, что assets/our-song.mp3 загружен на GitHub';
+});
+
 audio.addEventListener('ended', () => {
-  musicToggle.textContent = '▶';
-  musicToggle.setAttribute('aria-label', 'Включить музыку');
+  setMusicPlaying(false);
   musicStatus.textContent = 'Наша песня закончилась';
 });
 
